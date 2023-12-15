@@ -1,6 +1,8 @@
+import { PropsWithChildren } from "react";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import { ChakraProvider } from "@chakra-ui/react";
+
+import { withStyledSystem } from "@/features/shared/components";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -10,15 +12,18 @@ export const metadata: Metadata = {
     "Cheaf busca acabar con el desperdicio de alimentos en tiendas y restaurantes",
 };
 
-function App({ children }: { children: React.ReactNode }): JSX.Element {
-  return <ChakraProvider>{children}</ChakraProvider>;
-}
-
 function RootLayout({ children }: { children: React.ReactNode }): JSX.Element {
+  const AppWithChakraUI = withStyledSystem(
+    ({ children }: PropsWithChildren) => {
+      return <>{children}</>;
+    },
+    "chakra-ui"
+  );
+
   return (
     <html lang="en">
       <body className={inter.className}>
-        <App>{children}</App>
+        <AppWithChakraUI>{children}</AppWithChakraUI>
       </body>
     </html>
   );

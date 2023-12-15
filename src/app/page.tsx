@@ -1,9 +1,29 @@
 "use client";
 
-import { Box, Flex, Text } from "@chakra-ui/react";
 import { Link } from "@chakra-ui/next-js";
+import { Box, Flex, Text } from "@chakra-ui/react";
 
 function Home() {
+  const renderLinkButton = (href: string, text: string) => {
+    return (
+      <Link
+        href={href}
+        bgColor="yellow.100"
+        p="1rem 2rem"
+        w="fit-content"
+        minW="8rem"
+        borderRadius="0.875rem"
+        textAlign="center"
+        _hover={{
+          bgColor: "yellow.200",
+          textDecoration: "none",
+        }}
+      >
+        {text}
+      </Link>
+    );
+  };
+
   return (
     <Box
       as="main"
@@ -17,19 +37,10 @@ function Home() {
         <Text as="h1" fontSize="6xl" color="yellow.200">
           Cheaf Challenge
         </Text>
-        <Link
-          href="/login"
-          bgColor="yellow.100"
-          w="fit-content"
-          p="1rem 2rem"
-          borderRadius="0.875rem"
-          _hover={{
-            bgColor: "yellow.200",
-            textDecoration: "none",
-          }}
-        >
-          Ir a la página de login
-        </Link>
+        <Flex gap="1rem">
+          {renderLinkButton("/auth?register=true", "Sign Up")}
+          {renderLinkButton("/auth?register=false", "Login")}
+        </Flex>
       </Flex>
     </Box>
   );
