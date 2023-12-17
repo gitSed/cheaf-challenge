@@ -15,19 +15,19 @@ function AuthPage(): JSX.Element {
   const breakpoint = useBreakpoint({ fallback: "base" });
   const searchParams = useSearchParams();
 
+  const authRepository = new FirestoreAuthRepository(firestoreDB);
+  const authFetcher = new ReactQueryAuthFetcher();
+
   const isRegister = searchParams.get("register") !== "false";
 
   const renderSignUpComponent = (): JSX.Element => {
-    const authRepository = new FirestoreAuthRepository(firestoreDB);
-    const authFetcher = new ReactQueryAuthFetcher();
-
     return (
       <RegisterContainer repository={authRepository} fetcher={authFetcher} />
     );
   };
 
   const renderLoginComponent = (): JSX.Element => {
-    return <LoginContainer />;
+    return <LoginContainer repository={authRepository} fetcher={authFetcher} />;
   };
 
   const renderIllustration = (): JSX.Element => {

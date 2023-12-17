@@ -7,6 +7,8 @@ import {
   getAuth,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  GoogleAuthProvider,
+  signInWithPopup,
 } from "firebase/auth";
 
 import { FirebaseContext } from ".";
@@ -55,11 +57,25 @@ function FirebaseProvider({ children }: { children: React.ReactNode }) {
       });
   };
 
+  const handleSignInWithGoogle = async () => {
+    const provider = new GoogleAuthProvider();
+
+    return await signInWithPopup(auth, provider)
+      .then((result) => {
+        return result.user;
+      })
+      .catch(({ code, message }) => {
+        console.error({ code, message });
+        throw new Error(message);
+      });
+  };
+
   return (
     <FirebaseContext.Provider
       value={{
         createUserWithEmailAndPassword: handleCreateUserWithEmailAndPassword,
         signInWithEmailAndPassword: handleSignInWithEmailAndPassword,
+        signInWithGoogle: handleSignInWithGoogle,
         firestoreDB: db,
       }}
     >

@@ -14,7 +14,7 @@ function RegisterContainer(props: RegisterContainerProps): JSX.Element {
   const { repository, fetcher } = props;
 
   const router = useRouter();
-  const { createUserWithEmailAndPassword } = useFirebase();
+  const { createUserWithEmailAndPassword, signInWithGoogle } = useFirebase();
 
   const { mutate, isLoading, isSuccess } = fetcher.saveUserInfoMutation(
     saveUserInfoUseCase(repository)
@@ -33,6 +33,30 @@ function RegisterContainer(props: RegisterContainerProps): JSX.Element {
       });
   };
 
+  const handleGoogleSignIn = async () => {
+    signInWithGoogle()
+      .then((registeredUser) => {
+        if (registeredUser) {
+          mutate({
+            lead: {
+              name: registeredUser.displayName || "",
+              email: registeredUser.email || "",
+              password: "",
+            },
+            uid: registeredUser.uid,
+          });
+        }
+      })
+      .catch((err) => {
+        // TODO - Show Error Alert
+        console.error(err);
+      });
+  };
+
+  const handleFacebookSignIn = () => {
+    alert("Implement Facebook Sign In");
+  };
+
   useEffect(() => {
     if (isSuccess) {
       router.push("/gallery");
@@ -49,7 +73,10 @@ function RegisterContainer(props: RegisterContainerProps): JSX.Element {
       <Text as="h1" fontSize="4xl" fontWeight="600" color="green.500">
         Create Account
       </Text>
-      <AuthSocialButtons />
+      <AuthSocialButtons
+        onGoogleClick={handleGoogleSignIn}
+        onFacebookClick={handleFacebookSignIn}
+      />
       <Text>or use your email for registration</Text>
       <Box w="100%" maxW="30rem" mt="2rem">
         <RegisterForm
