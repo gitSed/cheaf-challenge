@@ -3,12 +3,12 @@
 import { useSearchParams } from "next/navigation";
 import { AspectRatio, Box, Flex, Image, useBreakpoint } from "@chakra-ui/react";
 
-import { RegisterContainer } from "@/features/auth/containers";
+import { LoginContainer, RegisterContainer } from "@/features/auth/containers";
+import { useFirebase } from "@/features/shared/hooks";
 import {
   FirestoreAuthRepository,
   ReactQueryAuthFetcher,
 } from "@/domain/auth/infrastructure";
-import { useFirebase } from "@/features/shared/hooks";
 
 function AuthPage(): JSX.Element {
   const { firestoreDB } = useFirebase();
@@ -27,7 +27,7 @@ function AuthPage(): JSX.Element {
   };
 
   const renderLoginComponent = (): JSX.Element => {
-    return <>Aqui va LoginContainer</>;
+    return <LoginContainer />;
   };
 
   const renderIllustration = (): JSX.Element => {

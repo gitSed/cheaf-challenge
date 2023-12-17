@@ -1,40 +1,24 @@
-"use client";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { Link } from "@chakra-ui/next-js";
+import { Box, Flex, Text } from "@chakra-ui/react";
 
-import { Box, Flex, Icon, IconButton, Text } from "@chakra-ui/react";
-
-import { FacebookIcon, GoogleIcon } from "@/features/shared/icons";
 import { useFirebase } from "@/features/shared/hooks";
 import { Lead } from "@/domain/auth/domain/entities";
 import { saveUserInfoUseCase } from "@/domain/auth/application";
 
-import { RegisterForm } from "../../components";
+import { AuthSocialButtons, RegisterForm } from "../../components";
 import { RegisterContainerProps } from "./RegisterContainer.types";
 
 function RegisterContainer(props: RegisterContainerProps): JSX.Element {
   const { repository, fetcher } = props;
 
+  const router = useRouter();
   const { createUserWithEmailAndPassword } = useFirebase();
 
   const { mutate, isLoading, isSuccess } = fetcher.saveUserInfoMutation(
     saveUserInfoUseCase(repository)
   );
-
-  const renderSocialButtons = () => {
-    return (
-      <Flex gap="0.5rem">
-        <IconButton
-          isRound
-          aria-label="facebook"
-          icon={<Icon as={FacebookIcon} boxSize={9} />}
-        />
-        <IconButton
-          isRound
-          aria-label="google"
-          icon={<Icon as={GoogleIcon} boxSize={9} />}
-        />
-      </Flex>
-    );
-  };
 
   const handleSubmit = async (values: Lead) => {
     await createUserWithEmailAndPassword(values.email, values.password)
@@ -49,6 +33,12 @@ function RegisterContainer(props: RegisterContainerProps): JSX.Element {
       });
   };
 
+  useEffect(() => {
+    if (isSuccess) {
+      router.push("/gallery");
+    }
+  }, [isSuccess]);
+
   return (
     <Flex
       p={{ base: "4rem 2.5rem", lg: "4rem 5rem" }}
@@ -59,7 +49,7 @@ function RegisterContainer(props: RegisterContainerProps): JSX.Element {
       <Text as="h1" fontSize="4xl" fontWeight="600" color="green.500">
         Create Account
       </Text>
-      {renderSocialButtons()}
+      <AuthSocialButtons />
       <Text>or use your email for registration</Text>
       <Box w="100%" maxW="30rem" mt="2rem">
         <RegisterForm
@@ -73,6 +63,12 @@ function RegisterContainer(props: RegisterContainerProps): JSX.Element {
           onSubmit={handleSubmit}
         />
       </Box>
+      <Text>
+        Already have an account?{" "}
+        <Link href="/auth?register=false" fontWeight="700">
+          Login
+        </Link>
+      </Text>
     </Flex>
   );
 }

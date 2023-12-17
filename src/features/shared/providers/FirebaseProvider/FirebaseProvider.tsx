@@ -3,7 +3,11 @@
 import React from "react";
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
 
 import { FirebaseContext } from ".";
 
@@ -37,10 +41,25 @@ function FirebaseProvider({ children }: { children: React.ReactNode }) {
       });
   };
 
+  const handleSignInWithEmailAndPassword = async (
+    email: string,
+    password: string
+  ) => {
+    return await signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        return userCredential.user;
+      })
+      .catch(({ code, message }) => {
+        console.error({ code, message });
+        throw new Error(message);
+      });
+  };
+
   return (
     <FirebaseContext.Provider
       value={{
         createUserWithEmailAndPassword: handleCreateUserWithEmailAndPassword,
+        signInWithEmailAndPassword: handleSignInWithEmailAndPassword,
         firestoreDB: db,
       }}
     >
