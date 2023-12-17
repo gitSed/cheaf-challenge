@@ -4,12 +4,31 @@ import { useSearchParams } from "next/navigation";
 import { AspectRatio, Box, Flex, Image, useBreakpoint } from "@chakra-ui/react";
 
 import { RegisterContainer } from "@/features/auth/containers";
+import {
+  FirestoreAuthRepository,
+  ReactQueryAuthFetcher,
+} from "@/domain/auth/infrastructure";
+import { useFirebase } from "@/features/shared/hooks";
 
 function AuthPage(): JSX.Element {
+  const { firestoreDB } = useFirebase();
   const breakpoint = useBreakpoint({ fallback: "base" });
   const searchParams = useSearchParams();
 
   const isRegister = searchParams.get("register") !== "false";
+
+  const renderSignUpComponent = (): JSX.Element => {
+    const authRepository = new FirestoreAuthRepository(firestoreDB);
+    const authFetcher = new ReactQueryAuthFetcher();
+
+    return (
+      <RegisterContainer repository={authRepository} fetcher={authFetcher} />
+    );
+  };
+
+  const renderLoginComponent = (): JSX.Element => {
+    return <>Aqui va LoginContainer</>;
+  };
 
   const renderIllustration = (): JSX.Element => {
     return (
@@ -22,14 +41,6 @@ function AuthPage(): JSX.Element {
         />
       </AspectRatio>
     );
-  };
-
-  const renderSignUpComponent = (): JSX.Element => {
-    return <RegisterContainer />;
-  };
-
-  const renderLoginComponent = (): JSX.Element => {
-    return <>Aqui va LoginContainer</>;
   };
 
   return (

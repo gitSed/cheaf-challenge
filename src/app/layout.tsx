@@ -2,7 +2,11 @@ import { PropsWithChildren } from "react";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 
-import { withStyledSystem } from "@/features/shared/components";
+import {
+  withFetcherSystem,
+  withStyledSystem,
+} from "@/features/shared/components";
+import { FirebaseProvider } from "@/features/shared/providers";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,10 +24,14 @@ function RootLayout({ children }: { children: React.ReactNode }): JSX.Element {
     "chakra-ui"
   );
 
+  const AppWithReactQuery = withFetcherSystem(AppWithChakraUI, "react-query");
+
   return (
     <html lang="en">
       <body className={inter.className}>
-        <AppWithChakraUI>{children}</AppWithChakraUI>
+        <FirebaseProvider>
+          <AppWithReactQuery>{children}</AppWithReactQuery>
+        </FirebaseProvider>
       </body>
     </html>
   );

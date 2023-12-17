@@ -3,11 +3,22 @@
 import { Box, Flex, Icon, IconButton, Text } from "@chakra-ui/react";
 
 import { FacebookIcon, GoogleIcon } from "@/features/shared/icons";
+import { useFirebase } from "@/features/shared/hooks";
 import { Lead } from "@/domain/auth/domain/entities";
+import { saveUserInfoUseCase } from "@/domain/auth/application";
 
-import { RegisterForm } from "../components";
+import { RegisterForm } from "../../components";
+import { RegisterContainerProps } from "./RegisterContainer.types";
 
-function RegisterContainer(): JSX.Element {
+function RegisterContainer(props: RegisterContainerProps): JSX.Element {
+  const { repository, fetcher } = props;
+
+  const { createUserWithEmailAndPassword } = useFirebase();
+
+  const { mutate, isLoading, isSuccess } = fetcher.saveUserInfoMutation(
+    saveUserInfoUseCase(repository)
+  );
+
   const renderSocialButtons = () => {
     return (
       <Flex gap="0.5rem">
@@ -25,7 +36,18 @@ function RegisterContainer(): JSX.Element {
     );
   };
 
-  const handleSubmit = (values: Lead) => {};
+  const handleSubmit = async (values: Lead) => {
+    await createUserWithEmailAndPassword(values.email, values.password)
+      .then((registeredUser) => {
+        if (registeredUser) {
+          mutate({ lead: values, uid: registeredUser.uid });
+        }
+      })
+      .catch((err) => {
+        // TODO - Show Error Alert
+        console.error(err);
+      });
+  };
 
   return (
     <Flex
@@ -46,8 +68,8 @@ function RegisterContainer(): JSX.Element {
             email: "",
             password: "",
           }}
-          isSubmitting={false}
-          isSuccess={false}
+          isSubmitting={isLoading}
+          isSuccess={isSuccess}
           onSubmit={handleSubmit}
         />
       </Box>

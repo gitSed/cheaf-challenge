@@ -1,1 +1,1 @@
-export { default as RegisterContainer } from "./RegisterContainer.component";
+export { default as RegisterContainer } from "./RegisterContainer/RegisterContainer.component";
