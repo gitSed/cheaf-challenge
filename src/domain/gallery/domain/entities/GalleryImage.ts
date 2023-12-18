@@ -1,9 +1,10 @@
 interface GalleryImage {
   id: string;
   link: string;
+  title: string;
+  type: string;
   height: number;
   width: number;
-  title: string;
 }
 
 export default GalleryImage;

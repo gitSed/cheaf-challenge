@@ -14,8 +14,9 @@ function useGetImageByTag(
   const { data, error, isError, isLoading, isSuccess } = useQuery<
     Array<GalleryImage>
   >({
-    queryKey: ["get-image-by-id", request],
+    queryKey: ["get-image-by-tag", request],
     queryFn,
+    enabled: !!request.tagName,
     staleTime: 60000,
   });
 

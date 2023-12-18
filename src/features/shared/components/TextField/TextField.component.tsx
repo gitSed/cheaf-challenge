@@ -7,6 +7,8 @@ import {
   FormHelperText,
   FormLabel,
   Input,
+  InputGroup,
+  InputRightElement,
 } from "@chakra-ui/react";
 
 import { FieldErrorMessage } from "@/features/shared/components";
@@ -26,6 +28,7 @@ function TextField(
     showError = true,
     hiddenLabel = false,
     placeholder,
+    rightElement,
     ...controller
   } = props;
   const { field, fieldState } = useController(controller);
@@ -38,14 +41,17 @@ function TextField(
       isRequired={isRequired}
     >
       <FormLabel hidden={hiddenLabel}>{label}</FormLabel>
-      <Input
-        {...field}
-        ref={ref}
-        type={controller.type || "text"}
-        aria-labelledby={`${id || field.name}-label`}
-        placeholder={placeholder}
-        variant="solid"
-      />
+      <InputGroup>
+        <Input
+          {...field}
+          ref={ref}
+          type={controller.type || "text"}
+          aria-labelledby={`${id || field.name}-label`}
+          placeholder={placeholder}
+          variant="solid"
+        />
+        {rightElement && <InputRightElement>{rightElement}</InputRightElement>}
+      </InputGroup>
       {fieldState.error && fieldState.error.message && showError ? (
         <FieldErrorMessage error={fieldState.error.message} />
       ) : (

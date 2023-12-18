@@ -1,7 +1,5 @@
 import { LoginCredentials } from ".";
 
-interface LoginRequest {
-  credentials: LoginCredentials;
-}
+interface LoginRequest extends LoginCredentials {}
 
 export default LoginRequest;

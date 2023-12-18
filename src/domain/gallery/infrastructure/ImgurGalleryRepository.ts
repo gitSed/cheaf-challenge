@@ -4,13 +4,21 @@ import { GalleryImage, MetadataRequest } from "../domain/entities";
 interface ImageApiResponse {
   id: string;
   link: string;
+  gifv?: string;
+  type: string;
   height: number;
   width: number;
 }
 
 interface ItemApiResponse {
   title: string;
-  images: Array<ImageApiResponse>;
+  images?: Array<ImageApiResponse>;
+  id: string;
+  link: string;
+  gifv?: string;
+  type: string;
+  height: number;
+  width: number;
 }
 
 interface ApiResponse {
@@ -34,15 +42,35 @@ class ImgurGalleryRepository implements GalleryRepository {
         },
       }).then((resp) => resp.json());
 
-      console.log({ response });
+      const getLink = (image: ImageApiResponse): string => {
+        if (image.type === "video/mp4") {
+          return image.gifv ? image.gifv : image.link;
+        }
 
-      return response.data.items.map((item) => ({
-        id: item.images[0].id,
-        link: item.images[0].link,
-        height: item.images[0].height,
-        width: item.images[0].width,
-        title: item.title,
-      }));
+        return image.link;
+      };
+
+      return response.data.items.map((item) => {
+        if (!!item?.images === false) {
+          return {
+            id: item.id,
+            link: item.link,
+            title: item.title,
+            type: item.type,
+            height: item.height,
+            width: item.width,
+          };
+        }
+
+        return {
+          id: item.images[0].id,
+          link: getLink(item.images[0]),
+          title: item.title,
+          type: item.images[0].type,
+          height: item.images[0].height,
+          width: item.images[0].width,
+        };
+      });
     } catch (err) {
       console.error(err);
       throw new Error("Error searching images");
