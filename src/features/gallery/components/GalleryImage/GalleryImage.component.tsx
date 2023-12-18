@@ -1,9 +1,13 @@
 import { AspectRatio, Box, Image } from "@chakra-ui/react";
 
+import { useVisible } from "@/features/shared/hooks";
+
 import { GalleryImageProps } from "./GalleryImage.types";
 
 function GalleryImage(props: GalleryImageProps) {
   const { link, title, onClick } = props;
+
+  const { isVisible, ref } = useVisible<HTMLDivElement>();
 
   return (
     <Box
@@ -12,10 +16,13 @@ function GalleryImage(props: GalleryImageProps) {
       overflow="hidden"
       cursor="pointer"
       onClick={onClick}
+      ref={ref}
     >
-      <AspectRatio ratio={1}>
-        <Image src={link} alt={title || "Gallery image"} loading="lazy" />
-      </AspectRatio>
+      {isVisible && (
+        <AspectRatio ratio={1}>
+          <Image src={link} alt={title || "Gallery image"} loading="lazy" />
+        </AspectRatio>
+      )}
     </Box>
   );
 }

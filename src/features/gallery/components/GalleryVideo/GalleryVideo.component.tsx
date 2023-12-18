@@ -1,12 +1,15 @@
 import { useRef } from "react";
 import { Box } from "@chakra-ui/react";
 
+import { useVisible } from "@/features/shared/hooks";
+
 import { GalleryVideoProps } from "./GalleryVideo.types";
 
 function GalleryVideo(props: GalleryVideoProps) {
   const { link, title, onClick } = props;
 
   const videoRef = useRef<HTMLVideoElement>(null);
+  const { isVisible, ref } = useVisible<HTMLDivElement>();
 
   const getPosterUrl = () => {
     if (link.includes(".gifv")) {
@@ -28,26 +31,31 @@ function GalleryVideo(props: GalleryVideoProps) {
       overflow="hidden"
       cursor="pointer"
       onClick={onClick}
+      ref={ref}
     >
-      <video
-        loop
-        muted
-        ref={videoRef}
-        title={title || "gallery video"}
-        poster={getPosterUrl()}
-        onMouseEnter={() => {
-          if (videoRef.current) {
-            videoRef.current.play();
-          }
-        }}
-        onMouseLeave={() => {
-          if (videoRef.current) {
-            videoRef.current.pause();
-          }
-        }}
-      >
-        <source src={getSourceUrl()} type="video/mp4" />
-      </video>
+      {isVisible && (
+        <video
+          loop
+          muted
+          playsInline
+          preload="none"
+          ref={videoRef}
+          title={title || "gallery video"}
+          poster={getPosterUrl()}
+          onMouseEnter={() => {
+            if (videoRef.current) {
+              videoRef.current.play();
+            }
+          }}
+          onMouseLeave={() => {
+            if (videoRef.current) {
+              videoRef.current.pause();
+            }
+          }}
+        >
+          <source src={getSourceUrl()} type="video/mp4" />
+        </video>
+      )}
     </Box>
   );
 }

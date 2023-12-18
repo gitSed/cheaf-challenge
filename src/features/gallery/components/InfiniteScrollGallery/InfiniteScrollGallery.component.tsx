@@ -33,7 +33,7 @@ function InfiniteScrollGallery(props: InfiniteScrollGalleryProps) {
           <Image
             src={link}
             alt={title || "Gallery image"}
-            loading="lazy"
+            loading="eager"
             borderRadius="1rem"
           />
         </Box>
