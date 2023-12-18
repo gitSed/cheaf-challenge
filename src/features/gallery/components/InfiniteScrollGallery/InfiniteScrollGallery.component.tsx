@@ -1,6 +1,7 @@
 import { useState } from "react";
 import {
   Box,
+  Button,
   Flex,
   Image,
   Modal,
@@ -81,7 +82,7 @@ function InfiniteScrollGallery(props: InfiniteScrollGalleryProps) {
 
   return (
     <>
-      <Box w="100%" h="100%">
+      <Flex w="100%" h="100%" flexDir="column" gap="2rem">
         <ResponsiveMasonry
           columnsCountBreakPoints={{ 300: 2, 500: 3, 700: 4, 900: 5 }}
         >
@@ -111,7 +112,10 @@ function InfiniteScrollGallery(props: InfiniteScrollGalleryProps) {
             )}
           </Masonry>
         </ResponsiveMasonry>
-      </Box>
+        <Button h="3.5rem" w="100%" margin="0 auto">
+          Load More
+        </Button>
+      </Flex>
       <Modal
         isCentered
         isOpen={!!content}

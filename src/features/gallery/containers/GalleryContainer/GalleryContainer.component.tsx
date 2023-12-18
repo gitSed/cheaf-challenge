@@ -87,7 +87,6 @@ function GalleryContainer(props: GalleryContainerProps) {
       <Flex
         ref={galleryRef}
         width="100%"
-        height="90vh"
         padding={{ base: "1rem", md: "2rem", lg: "5rem" }}
       >
         {data && <InfiniteScrollGallery items={data} />}
