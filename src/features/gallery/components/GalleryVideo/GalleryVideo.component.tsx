@@ -38,7 +38,6 @@ function GalleryVideo(props: GalleryVideoProps) {
           loop
           muted
           playsInline
-          preload="none"
           ref={videoRef}
           title={title || "gallery video"}
           poster={getPosterUrl()}

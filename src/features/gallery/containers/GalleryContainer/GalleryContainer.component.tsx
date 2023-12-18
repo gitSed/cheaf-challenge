@@ -6,7 +6,11 @@ import { useRouter, useSearchParams } from "next/navigation";
 
 import { getImageByTagInfinite } from "@/domain/gallery/application";
 
-import { InfiniteScrollGallery, SearchForm } from "../../components";
+import {
+  GalleryEmptyState,
+  InfiniteScrollGallery,
+  SearchForm,
+} from "../../components";
 import { GalleryContainerProps } from "./GalleryContainer.types";
 
 const DEFAULT_SEARCH_TERM = "Dog";
@@ -91,6 +95,7 @@ function GalleryContainer(props: GalleryContainerProps) {
         width="100%"
         padding={{ base: "1rem", md: "2rem", lg: "5rem" }}
       >
+        {isLoading && !infiniteData && <GalleryEmptyState />}
         {infiniteData && (
           <InfiniteScrollGallery
             items={infiniteData.pages.flatMap((page) => {
