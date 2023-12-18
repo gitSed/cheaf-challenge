@@ -1,6 +1,7 @@
 import { extendTheme } from "@chakra-ui/react";
 
 // components
+import Alert from "./theme-components/Alert";
 import Input from "./theme-components/Input";
 import Link from "./theme-components/Link";
 
@@ -16,6 +17,7 @@ const defaultTheme: Record<string, unknown> = {
   components: {
     Input,
     Link,
+    Alert,
   },
 };
 

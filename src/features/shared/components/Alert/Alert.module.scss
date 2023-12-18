@@ -1,0 +1,33 @@
+@keyframes countdown {
+  from {
+    stroke-dashoffset: 45px;
+  }
+
+  to {
+    stroke-dashoffset: 113px;
+  }
+}
+
+.CircleWrapper {
+  position: absolute;
+  top: 0;
+  width: 26px;
+  height: 26px;
+  transform: rotateY(-180deg) rotateZ(-90deg);
+}
+
+.Circle {
+  animation-name: countdown;
+  animation-duration: 1s;
+  animation-play-state: running;
+  animation-timing-function: linear;
+  animation-delay: 0s;
+  animation-iteration-count: 1;
+  animation-direction: normal;
+  animation-fill-mode: forwards;
+  fill: none;
+  stroke-dasharray: 113px;
+  stroke-dashoffset: 0;
+  stroke-linecap: round;
+  stroke-width: 2px;
+}

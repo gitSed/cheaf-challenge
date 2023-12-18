@@ -1,25 +1,52 @@
 "use client";
 
-import { useEffect } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { Box, Flex, Text } from "@chakra-ui/react";
+import { Box, Flex, Text, ToastId, useToast } from "@chakra-ui/react";
 import { Link } from "@chakra-ui/next-js";
 
 import { useFirebase } from "@/features/shared/hooks";
+import { Alert } from "@/features/shared/components";
 import { LoginRequest } from "@/domain/auth/domain/entities";
 import { saveUserInfoUseCase } from "@/domain/auth/application";
 
 import { AuthSocialButtons, LoginForm } from "../../components";
 import { LoginContainerProps } from "./LoginContainer.types";
 
+const TOAST_DURATION = 40000;
+
 function LoginContainer(props: LoginContainerProps) {
   const { fetcher, repository } = props;
 
   const router = useRouter();
+  const toastIdRef = useRef<ToastId>();
   const { signInWithEmailAndPassword, signInWithGoogle } = useFirebase();
 
-  const { mutate, isLoading, isSuccess } = fetcher.saveUserInfoMutation(
-    saveUserInfoUseCase(repository)
+  const toast = useToast({
+    position: "bottom",
+    duration: TOAST_DURATION,
+  });
+
+  const { mutate, isLoading, isSuccess, isError } =
+    fetcher.saveUserInfoMutation(saveUserInfoUseCase(repository));
+
+  const closeToast = useCallback(() => {
+    if (toastIdRef.current) {
+      toast.close(toastIdRef.current);
+    }
+  }, [toastIdRef, toast]);
+
+  const showToast = useCallback(
+    (status: "info" | "warning" | "success", message: string) => {
+      toastIdRef.current = toast({
+        render: () => {
+          return (
+            <Alert message={message} status={status} onDismiss={closeToast} />
+          );
+        },
+      });
+    },
+    [toastIdRef, toast]
   );
 
   const handleSubmit = async (values: LoginRequest) => {
@@ -31,7 +58,10 @@ function LoginContainer(props: LoginContainerProps) {
         }
       })
       .catch((err) => {
-        // TODO - Show Error Alert
+        showToast(
+          "warning",
+          "Invalid credential. Please verify your credentials and try again."
+        );
         console.error(err);
       });
   };
@@ -50,9 +80,17 @@ function LoginContainer(props: LoginContainerProps) {
           });
         }
       })
-      .catch((err) => {
-        // TODO - Show Error Alert
-        console.error(err);
+      .catch(({ code, message }) => {
+        if (code === "auth/invalid-credential") {
+          showToast(
+            "warning",
+            "Invalid credential. Please verify your credentials and try again."
+          );
+          return;
+        }
+
+        showToast("warning", "Something went wrong. Please try again.");
+        console.error(code, message);
       });
   };
 
@@ -65,6 +103,12 @@ function LoginContainer(props: LoginContainerProps) {
       router.push("/gallery");
     }
   }, [isSuccess]);
+
+  useEffect(() => {
+    if (isError) {
+      showToast("warning", "Something went wrong. Please try again.");
+    }
+  }, [isError]);
 
   return (
     <Flex

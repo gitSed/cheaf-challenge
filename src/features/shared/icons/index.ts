@@ -1,3 +1,4 @@
+export { default as CloseCircleIcon } from "./CloseCircleIcon";
 export { default as CloseIcon } from "./CloseIcon";
 export { default as ExitIcon } from "./ExitIcon";
 export { default as FacebookIcon } from "./FacebookIcon";
