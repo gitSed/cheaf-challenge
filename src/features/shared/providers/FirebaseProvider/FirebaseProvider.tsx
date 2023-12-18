@@ -86,13 +86,19 @@ function FirebaseProvider({ children }: { children: React.ReactNode }) {
   };
 
   useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setAuthStatus("authenticated");
-      } else {
-        setAuthStatus("unauthenticated");
+    onAuthStateChanged(
+      auth,
+      (user) => {
+        if (user) {
+          setAuthStatus("authenticated");
+        } else {
+          setAuthStatus("unauthenticated");
+        }
+      },
+      (error) => {
+        console.error(error);
       }
-    });
+    );
   }, []);
 
   return (

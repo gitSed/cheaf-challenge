@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Box, Flex, Text } from "@chakra-ui/react";
 import { Link } from "@chakra-ui/next-js";
@@ -58,6 +59,12 @@ function LoginContainer(props: LoginContainerProps) {
   const handleFacebookSignIn = () => {
     alert("Implement Facebook Sign In");
   };
+
+  useEffect(() => {
+    if (isSuccess) {
+      router.push("/gallery");
+    }
+  }, [isSuccess]);
 
   return (
     <Flex
