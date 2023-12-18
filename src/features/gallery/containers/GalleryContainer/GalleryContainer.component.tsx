@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react";
 import { Box, Flex } from "@chakra-ui/react";
 import { useRouter, useSearchParams } from "next/navigation";
 
-import { getImageByTag } from "@/domain/gallery/application";
+import { getImageByTagInfinite } from "@/domain/gallery/application";
 
 import { InfiniteScrollGallery, SearchForm } from "../../components";
 import { GalleryContainerProps } from "./GalleryContainer.types";
@@ -22,13 +22,15 @@ function GalleryContainer(props: GalleryContainerProps) {
 
   const searchTerm = searchParams.get("term");
 
-  const { isLoading, isSuccess, data } = fetcher.getImageByTag(
-    getImageByTag(repository),
-    {
-      page: 1,
-      tagName: searchTerm || "",
-    }
-  );
+  const {
+    data: infiniteData,
+    hasNextPage,
+    isLoading,
+    isSuccess,
+    fetchNextPage,
+  } = fetcher.getImageByTagInfinite(getImageByTagInfinite(repository), {
+    tagName: searchTerm || "",
+  });
 
   useEffect(() => {
     if (!!searchTerm === false) {
@@ -89,7 +91,15 @@ function GalleryContainer(props: GalleryContainerProps) {
         width="100%"
         padding={{ base: "1rem", md: "2rem", lg: "5rem" }}
       >
-        {data && <InfiniteScrollGallery items={data} />}
+        {infiniteData && (
+          <InfiniteScrollGallery
+            items={infiniteData.pages.flatMap((page) => {
+              return page.items.map((item) => ({ ...item }));
+            })}
+            hasMore={hasNextPage}
+            onLoadMoreClick={fetchNextPage}
+          />
+        )}
       </Flex>
     </Box>
   );

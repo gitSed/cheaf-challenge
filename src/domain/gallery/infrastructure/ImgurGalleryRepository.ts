@@ -1,5 +1,5 @@
 import { GalleryRepository } from "../domain/repositories";
-import { GalleryImage, MetadataRequest } from "../domain/entities";
+import { Gallery, MetadataRequest } from "../domain/entities";
 
 interface ImageApiResponse {
   id: string;
@@ -24,6 +24,7 @@ interface ItemApiResponse {
 interface ApiResponse {
   data: {
     items: Array<ItemApiResponse>;
+    total_items: number;
   };
 }
 
@@ -33,7 +34,7 @@ class ImgurGalleryRepository implements GalleryRepository {
     private readonly clientId: string
   ) {}
 
-  async getByTag(request: MetadataRequest): Promise<Array<GalleryImage>> {
+  async getByTag(request: MetadataRequest): Promise<Gallery> {
     try {
       const response: ApiResponse = await fetch(this.formatImgurURL(request), {
         method: "GET",
@@ -50,7 +51,7 @@ class ImgurGalleryRepository implements GalleryRepository {
         return image.link;
       };
 
-      return response.data.items.map((item) => {
+      const images = response.data.items.map((item) => {
         if (!!item?.images === false) {
           return {
             id: item.id,
@@ -71,6 +72,11 @@ class ImgurGalleryRepository implements GalleryRepository {
           width: item.images[0].width,
         };
       });
+
+      return {
+        items: images,
+        totalItems: response.data.total_items,
+      };
     } catch (err) {
       console.error(err);
       throw new Error("Error searching images");

@@ -1,6 +1,6 @@
 interface MetadataRequest {
   tagName: string;
-  page: number;
+  page?: number;
 }
 
 export default MetadataRequest;

@@ -16,7 +16,7 @@ import { GalleryImage, GalleryVideo } from "..";
 import { InfiniteScrollGalleryProps } from "./InfiniteScrollGallery.types";
 
 function InfiniteScrollGallery(props: InfiniteScrollGalleryProps) {
-  const { items } = props;
+  const { items, hasMore, onLoadMoreClick } = props;
 
   const [content, setContent] = useState<JSX.Element | null>(null);
 
@@ -112,7 +112,13 @@ function InfiniteScrollGallery(props: InfiniteScrollGalleryProps) {
             )}
           </Masonry>
         </ResponsiveMasonry>
-        <Button h="3.5rem" w="100%" margin="0 auto">
+        <Button
+          h="3.5rem"
+          w="100%"
+          margin="0 auto"
+          onClick={onLoadMoreClick}
+          isDisabled={!hasMore}
+        >
           Load More
         </Button>
       </Flex>
