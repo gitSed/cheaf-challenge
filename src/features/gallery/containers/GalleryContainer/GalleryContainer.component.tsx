@@ -4,6 +4,8 @@ import { useEffect, useRef } from "react";
 import { Box, Flex } from "@chakra-ui/react";
 import { useRouter, useSearchParams } from "next/navigation";
 
+import { SignOutButton } from "@/features/auth/components";
+import { useFirebase } from "@/features/shared/hooks";
 import { getImageByTagInfinite } from "@/domain/gallery/application";
 
 import {
@@ -17,6 +19,8 @@ const DEFAULT_SEARCH_TERM = "Dog";
 
 function GalleryContainer(props: GalleryContainerProps) {
   const { repository, fetcher } = props;
+
+  const { authStatus } = useFirebase();
 
   const searchBoxRef = useRef<HTMLDivElement>(null);
   const galleryRef = useRef<HTMLDivElement>(null);
@@ -89,14 +93,15 @@ function GalleryContainer(props: GalleryContainerProps) {
             isSuccess={isSuccess}
           />
         </Box>
+        <SignOutButton />
       </Box>
       <Flex
         ref={galleryRef}
         width="100%"
         padding={{ base: "1rem", md: "2rem", lg: "5rem" }}
       >
-        {isLoading && !infiniteData && <GalleryEmptyState />}
-        {infiniteData && (
+        {(isLoading || authStatus === "loading") && <GalleryEmptyState />}
+        {infiniteData && authStatus === "authenticated" && (
           <InfiniteScrollGallery
             items={infiniteData.pages.flatMap((page) => {
               return page.items.map((item) => ({ ...item }));

@@ -1,17 +1,19 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 import {
   getAuth,
+  signOut,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   GoogleAuthProvider,
   signInWithPopup,
+  onAuthStateChanged,
 } from "firebase/auth";
 
-import { FirebaseContext } from ".";
+import { FirebaseContext, AuthStatus } from ".";
 
 // Firebase configuration
 const firebaseConfig = {
@@ -29,6 +31,8 @@ const auth = getAuth(firebaseApp);
 const db = getFirestore(firebaseApp);
 
 function FirebaseProvider({ children }: { children: React.ReactNode }) {
+  const [authStatus, setAuthStatus] = useState<AuthStatus>("loading");
+
   const handleCreateUserWithEmailAndPassword = async (
     email: string,
     password: string
@@ -70,12 +74,35 @@ function FirebaseProvider({ children }: { children: React.ReactNode }) {
       });
   };
 
+  const handleSignOut = async () => {
+    return await signOut(auth)
+      .then(() => {
+        return null;
+      })
+      .catch(({ code, message }) => {
+        console.error({ code, message });
+        throw new Error(message);
+      });
+  };
+
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setAuthStatus("authenticated");
+      } else {
+        setAuthStatus("unauthenticated");
+      }
+    });
+  }, []);
+
   return (
     <FirebaseContext.Provider
       value={{
         createUserWithEmailAndPassword: handleCreateUserWithEmailAndPassword,
         signInWithEmailAndPassword: handleSignInWithEmailAndPassword,
         signInWithGoogle: handleSignInWithGoogle,
+        signOut: handleSignOut,
+        authStatus,
         firestoreDB: db,
       }}
     >
