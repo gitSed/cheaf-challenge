@@ -6,5 +6,5 @@ export interface UploadImageContainerProps {
   repository: GalleryRepository;
   fetcher: GalleryFetcher;
   imagesTag: string;
-  onImagesByTagLoaded: (images: Array<GalleryImage>) => void;
+  onUserImagesLoaded: (images: Array<GalleryImage>) => void;
 }

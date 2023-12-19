@@ -29,8 +29,9 @@ function GalleryContainer(props: GalleryContainerProps) {
   const searchBoxRef = useRef<HTMLDivElement>(null);
   const galleryRef = useRef<HTMLDivElement>(null);
 
-  const [userUploadedImages, setUserUploadedImages] =
-    useState<GalleryImage[]>();
+  const [userUploadedImages, setUserUploadedImages] = useState<GalleryImage[]>(
+    []
+  );
 
   const searchTerm = searchParams.get("term");
 
@@ -112,10 +113,10 @@ function GalleryContainer(props: GalleryContainerProps) {
           {infiniteData && authStatus === "authenticated" && (
             <InfiniteScrollGallery
               items={[
-                ...(userUploadedImages?.map((image) => ({ ...image })) || []),
-                ...infiniteData.pages.flatMap((page) => {
-                  return page.items.map((item) => ({ ...item }));
-                }),
+                ...userUploadedImages.map((image) => ({ ...image })),
+                ...infiniteData.pages.flatMap((page) =>
+                  page.items.map((item) => ({ ...item }))
+                ),
               ]}
               hasMore={hasNextPage}
               onLoadMoreClick={fetchNextPage}
@@ -127,7 +128,7 @@ function GalleryContainer(props: GalleryContainerProps) {
         fetcher={fetcher}
         repository={repositories.firestoreRepository}
         imagesTag={searchTerm || ""}
-        onImagesByTagLoaded={setUserUploadedImages}
+        onUserImagesLoaded={setUserUploadedImages}
       />
     </>
   );

@@ -1,8 +1,9 @@
-import { useEffect } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { Link } from "@chakra-ui/next-js";
-import { Box, Flex, Text } from "@chakra-ui/react";
+import { Box, Flex, Text, ToastId, useToast } from "@chakra-ui/react";
 
+import { Alert } from "@/features/shared/components";
 import { useFirebase } from "@/features/shared/hooks";
 import { Lead } from "@/domain/auth/domain/entities";
 import { saveUserInfoUseCase } from "@/domain/auth/application";
@@ -10,11 +11,38 @@ import { saveUserInfoUseCase } from "@/domain/auth/application";
 import { AuthSocialButtons, RegisterForm } from "../../components";
 import { RegisterContainerProps } from "./RegisterContainer.types";
 
+const TOAST_DURATION = 40000;
+
 function RegisterContainer(props: RegisterContainerProps): JSX.Element {
   const { repository, fetcher } = props;
 
   const router = useRouter();
+  const toastIdRef = useRef<ToastId>();
   const { createUserWithEmailAndPassword, signInWithGoogle } = useFirebase();
+
+  const toast = useToast({
+    position: "bottom",
+    duration: TOAST_DURATION,
+  });
+
+  const closeToast = useCallback(() => {
+    if (toastIdRef.current) {
+      toast.close(toastIdRef.current);
+    }
+  }, [toastIdRef, toast]);
+
+  const showToast = useCallback(
+    (status: "info" | "warning" | "success", message: string) => {
+      toastIdRef.current = toast({
+        render: () => {
+          return (
+            <Alert message={message} status={status} onDismiss={closeToast} />
+          );
+        },
+      });
+    },
+    [toastIdRef, toast]
+  );
 
   const { mutate, isLoading, isSuccess } = fetcher.saveUserInfoMutation(
     saveUserInfoUseCase(repository)
@@ -28,7 +56,10 @@ function RegisterContainer(props: RegisterContainerProps): JSX.Element {
         }
       })
       .catch((err) => {
-        // TODO - Show Error Alert
+        showToast(
+          "warning",
+          "There was an error while trying to create your account"
+        );
         console.error(err);
       });
   };
@@ -48,7 +79,10 @@ function RegisterContainer(props: RegisterContainerProps): JSX.Element {
         }
       })
       .catch((err) => {
-        // TODO - Show Error Alert
+        showToast(
+          "warning",
+          "There was an error while trying to create your account"
+        );
         console.error(err);
       });
   };

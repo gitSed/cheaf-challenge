@@ -6,7 +6,7 @@ import { UploadIcon } from "@/features/shared/icons";
 import { UploadImageFormProps } from "./UploadImageForm.types";
 
 function UploadImageForm(props: UploadImageFormProps) {
-  const { onUpload } = props;
+  const { onUpload, isUploading } = props;
 
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -51,6 +51,7 @@ function UploadImageForm(props: UploadImageFormProps) {
         variant="solid"
         size="lg"
         colorScheme="blue"
+        isLoading={isUploading}
         icon={<Icon as={UploadIcon} boxSize={6} />}
         onClick={handleButtonClick}
       />
