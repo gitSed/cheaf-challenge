@@ -1,6 +1,6 @@
 import { InfiniteData, QueryKey } from "@tanstack/react-query";
 
-import { Gallery, MetadataRequest } from "../entities";
+import { Gallery, MetadataRequest, UploadFileRequest } from "../entities";
 
 interface GalleryFetcher {
   readonly getImageByTag: (
@@ -31,6 +31,16 @@ interface GalleryFetcher {
     error: unknown;
     fetchNextPage: () => void;
     hasNextPage: boolean;
+  };
+
+  readonly uploadFileMutation: (
+    mutationFn: (request: UploadFileRequest) => Promise<void>
+  ) => {
+    mutate: (request: UploadFileRequest) => Promise<void>;
+    isLoading: boolean;
+    isSuccess: boolean;
+    isError: boolean;
+    error: unknown;
   };
 }
 

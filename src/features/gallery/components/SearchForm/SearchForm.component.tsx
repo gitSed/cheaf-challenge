@@ -38,7 +38,7 @@ function SearchForm(props: SearchFormProps) {
             isRound
             type="submit"
             aria-label="search"
-            icon={<Icon as={SearchIcon} boxSize={7} />}
+            icon={<Icon as={SearchIcon} boxSize={4} />}
             isDisabled={!isValid || isSubmitting}
             isLoading={isSubmitting}
           />

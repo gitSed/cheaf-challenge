@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Box, Icon, IconButton } from "@chakra-ui/react";
+import { Flex, Icon, IconButton, Text } from "@chakra-ui/react";
 
 import { useFirebase } from "@/features/shared/hooks";
 import { ExitIcon } from "@/features/shared/icons";
@@ -16,14 +16,22 @@ function SignOutButton() {
   }, [authStatus]);
 
   return (
-    <Box zIndex={2} position="absolute" top="1rem" right="1rem">
+    <Flex
+      position="absolute"
+      alignItems="center"
+      flexDir="column"
+      zIndex={2}
+      top="1.375rem"
+      right="1.375rem"
+    >
       <IconButton
         isRound
         aria-label="Sign out"
-        icon={<Icon as={ExitIcon} boxSize={6} />}
+        icon={<Icon as={ExitIcon} boxSize={4} />}
         onClick={signOut}
       />
-    </Box>
+      <Text fontWeight="500">Log out</Text>
+    </Flex>
   );
 }
 

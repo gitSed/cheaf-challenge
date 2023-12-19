@@ -4,3 +4,4 @@ export { default as ExitIcon } from "./ExitIcon";
 export { default as FacebookIcon } from "./FacebookIcon";
 export { default as GoogleIcon } from "./GoogleIcon";
 export { default as SearchIcon } from "./SearchIcon";
+export { default as UploadIcon } from "./UploadIcon";

@@ -1,7 +1,16 @@
-import { QueryKey, useQuery, useInfiniteQuery } from "@tanstack/react-query";
+import {
+  QueryKey,
+  useQuery,
+  useInfiniteQuery,
+  useMutation,
+} from "@tanstack/react-query";
 
 import { GalleryFetcher } from "../domain/fetchers";
-import { Gallery, MetadataRequest } from "../domain/entities";
+import {
+  Gallery,
+  MetadataRequest,
+  UploadFileRequest,
+} from "../domain/entities";
 
 const TOTAL_ITEMS_PER_PAGE = 60;
 
@@ -79,9 +88,26 @@ function useGetImageByTagInfinite(
   };
 }
 
+function useUploadFileMutation(
+  mutationFn: (request: UploadFileRequest) => Promise<void>
+) {
+  const { mutateAsync, isPending, isSuccess, isError, error } = useMutation({
+    mutationFn,
+  });
+
+  return {
+    mutate: mutateAsync,
+    isLoading: isPending,
+    isSuccess,
+    isError,
+    error,
+  };
+}
+
 class ReactQueryGalleryFetcher implements GalleryFetcher {
   readonly getImageByTag = useGetImageByTag;
   readonly getImageByTagInfinite = useGetImageByTagInfinite;
+  readonly uploadFileMutation = useUploadFileMutation;
 }
 
 export default ReactQueryGalleryFetcher;

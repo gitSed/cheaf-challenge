@@ -1,5 +1,9 @@
 import { GalleryRepository } from "../domain/repositories";
-import { Gallery, MetadataRequest } from "../domain/entities";
+import {
+  Gallery,
+  MetadataRequest,
+  UploadFileRequest,
+} from "../domain/entities";
 
 interface ImageApiResponse {
   id: string;
@@ -33,6 +37,10 @@ class ImgurGalleryRepository implements GalleryRepository {
     private readonly apiUrl: string,
     private readonly clientId: string
   ) {}
+
+  uploadFile(request: UploadFileRequest): Promise<void> {
+    throw new Error("Method not implemented.");
+  }
 
   async getByTag(request: MetadataRequest): Promise<Gallery> {
     try {
