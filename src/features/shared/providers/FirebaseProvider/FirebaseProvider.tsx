@@ -2,7 +2,16 @@
 
 import React, { useEffect, useState } from "react";
 import { initializeApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
+import {
+  DocumentData,
+  QuerySnapshot,
+  WhereFilterOp,
+  collection,
+  getFirestore,
+  onSnapshot,
+  query,
+  where,
+} from "firebase/firestore";
 import {
   getAuth,
   signOut,
@@ -85,6 +94,21 @@ function FirebaseProvider({ children }: { children: React.ReactNode }) {
       });
   };
 
+  const handleSubscribeToCollectionChanges = (
+    path: string,
+    condition: [string, WhereFilterOp, string],
+    callbackFn: (
+      querySnapshot: QuerySnapshot<DocumentData, DocumentData>
+    ) => void
+  ) => {
+    const q = query(
+      collection(db, path),
+      where(condition[0], condition[1], condition[2])
+    );
+
+    return onSnapshot(q, callbackFn);
+  };
+
   useEffect(() => {
     onAuthStateChanged(
       auth,
@@ -95,9 +119,7 @@ function FirebaseProvider({ children }: { children: React.ReactNode }) {
           setAuthStatus("unauthenticated");
         }
       },
-      (error) => {
-        console.error(error);
-      }
+      console.error
     );
   }, []);
 
@@ -108,6 +130,7 @@ function FirebaseProvider({ children }: { children: React.ReactNode }) {
         signInWithEmailAndPassword: handleSignInWithEmailAndPassword,
         signInWithGoogle: handleSignInWithGoogle,
         signOut: handleSignOut,
+        subscribeToCollectionChanges: handleSubscribeToCollectionChanges,
         authStatus,
         firestoreDB: db,
       }}

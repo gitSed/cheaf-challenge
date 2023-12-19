@@ -24,6 +24,9 @@ class FirestoreGalleryRepository implements GalleryRepository {
       await addDoc(collection(this.firestoreDB, "images"), {
         fileName: request.fileName,
         file: await this.fileToBase64(request.file),
+        tag: request.tag,
+        type: request.type,
+        description: request.description,
       });
 
       return;
