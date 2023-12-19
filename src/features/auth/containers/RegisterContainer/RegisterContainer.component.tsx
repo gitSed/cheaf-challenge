@@ -44,9 +44,8 @@ function RegisterContainer(props: RegisterContainerProps): JSX.Element {
     [toastIdRef, toast]
   );
 
-  const { mutate, isLoading, isSuccess } = fetcher.saveUserInfoMutation(
-    saveUserInfoUseCase(repository)
-  );
+  const { mutate, isLoading, isSuccess, isError } =
+    fetcher.saveUserInfoMutation(saveUserInfoUseCase(repository));
 
   const handleSubmit = async (values: Lead) => {
     await createUserWithEmailAndPassword(values.email, values.password)
@@ -88,14 +87,21 @@ function RegisterContainer(props: RegisterContainerProps): JSX.Element {
   };
 
   const handleFacebookSignIn = () => {
-    alert("Implement Facebook Sign In");
+    showToast("warning", "Facebook Sign In is not implemented yet");
   };
 
   useEffect(() => {
     if (isSuccess) {
       router.push("/gallery");
     }
-  }, [isSuccess]);
+
+    if (isError) {
+      showToast(
+        "warning",
+        "There was an error while trying to create your account"
+      );
+    }
+  }, [isSuccess, isError]);
 
   return (
     <Flex

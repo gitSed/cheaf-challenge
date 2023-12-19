@@ -1,5 +1,3 @@
-"use client";
-
 import { useCallback, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { Box, Flex, Text, ToastId, useToast } from "@chakra-ui/react";
@@ -50,7 +48,6 @@ function LoginContainer(props: LoginContainerProps) {
   );
 
   const handleSubmit = async (values: LoginRequest) => {
-    // TODO - Show Loading State
     await signInWithEmailAndPassword(values.email, values.password)
       .then((user) => {
         if (user) {
@@ -95,20 +92,18 @@ function LoginContainer(props: LoginContainerProps) {
   };
 
   const handleFacebookSignIn = () => {
-    alert("Implement Facebook Sign In");
+    showToast("warning", "Facebook Sign In is not yet implemented.");
   };
 
   useEffect(() => {
     if (isSuccess) {
       router.push("/gallery");
     }
-  }, [isSuccess]);
 
-  useEffect(() => {
     if (isError) {
       showToast("warning", "Something went wrong. Please try again.");
     }
-  }, [isError]);
+  }, [isSuccess, isError]);
 
   return (
     <Flex
