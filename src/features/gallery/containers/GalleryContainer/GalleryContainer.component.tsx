@@ -10,7 +10,7 @@ import { getImageByTagInfinite } from "@/domain/gallery/application";
 import { GalleryImage } from "@/domain/gallery/domain/entities";
 
 import {
-  GalleryEmptyState,
+  GalleryLoadingState,
   InfiniteScrollGallery,
   SearchForm,
 } from "../../components";
@@ -109,8 +109,8 @@ function GalleryContainer(props: GalleryContainerProps) {
           width="100%"
           padding={{ base: "1rem", md: "2rem", lg: "5rem" }}
         >
-          {(isLoading || authStatus === "loading") && <GalleryEmptyState />}
-          {infiniteData && authStatus === "authenticated" && (
+          {(isLoading || authStatus === "loading") && <GalleryLoadingState />}
+          {infiniteData && authStatus !== "loading" && (
             <InfiniteScrollGallery
               items={[
                 ...userUploadedImages.map((image) => ({ ...image })),

@@ -1,5 +1,4 @@
-import { Button, Flex, Skeleton } from "@chakra-ui/react";
-import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
+import { AspectRatio, Flex, Image, Text } from "@chakra-ui/react";
 
 function GalleryEmptyState() {
   return (
@@ -7,21 +6,25 @@ function GalleryEmptyState() {
       w="100%"
       h="100%"
       flexDir="column"
-      gap="2rem"
-      padding={{ base: "1rem", md: "2rem", lg: "5rem" }}
+      alignItems="center"
+      justifyContent="center"
     >
-      <ResponsiveMasonry
-        columnsCountBreakPoints={{ 300: 2, 500: 3, 700: 4, 900: 5 }}
-      >
-        <Masonry gutter="1rem" columnsCount={5}>
-          {Array.from({ length: 16 }).map((_, idx) => (
-            <Skeleton key={idx} w="100%" h="351px" />
-          ))}
-        </Masonry>
-      </ResponsiveMasonry>
-      <Button h="3.5rem" w="100%" margin="0 auto">
-        Load More
-      </Button>
+      <AspectRatio w="100%" maxW={{ base: "12rem", md: "20rem" }} ratio={1}>
+        <Image
+          src="/images/empty-state.png"
+          alt="Gallery empty state"
+          objectFit="cover"
+        />
+      </AspectRatio>
+      <Text as="h1" fontSize="3xl" fontWeight="500" marginTop="3rem">
+        Parece un poco vacío aquí...
+      </Text>
+      <Text as="h2" fontSize="1xl" fontWeight="400" color="gray.400">
+        Comienza subiendo tus imágenes haciendo click en el botón de color{" "}
+        <Text as="label" fontSize="1xl" fontWeight="700" color="blue.500">
+          azul
+        </Text>
+      </Text>
     </Flex>
   );
 }

@@ -12,7 +12,7 @@ import {
 } from "@chakra-ui/react";
 import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
 
-import { GalleryImage, GalleryVideo } from "..";
+import { GalleryEmptyState, GalleryImage, GalleryVideo } from "..";
 import { InfiniteScrollGalleryProps } from "./InfiniteScrollGallery.types";
 
 function InfiniteScrollGallery(props: InfiniteScrollGalleryProps) {
@@ -79,6 +79,14 @@ function InfiniteScrollGallery(props: InfiniteScrollGalleryProps) {
         setContent(renderVideoModalContent(title, link));
       }
     };
+
+  if (items.length === 0) {
+    return (
+      <Box w="100%" marginTop="5rem">
+        <GalleryEmptyState />
+      </Box>
+    );
+  }
 
   return (
     <>
